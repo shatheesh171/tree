@@ -51,4 +51,118 @@ def levelOrderTraversal(rootNode):
         if root.value.rightChild is not None:
             cq.enqueue(root.value.rightChild)
 
+
+def searchBT(rootNode, value):
+    if not rootNode:
+        return "Tree does not exist"
+    cq=queue.Queue()
+    cq.enqueue(rootNode)
+    while not(cq.isEmpty()):
+        root=cq.dequeue()
+        if root.value.data==value:
+            return "Success"
+        if root.value.leftChild is not None:
+            cq.enqueue(root.value.leftChild)
+        if root.value.rightChild is not None:
+            cq.enqueue(root.value.rightChild)
+    return "Not Found"
+    
+def insertNodeBT(rootNode,newNode):
+    if not rootNode:
+        rootNode=newNode
+        return rootNode
+    cq=queue.Queue()
+    cq.enqueue(rootNode)
+    while not(cq.isEmpty()):
+        root=cq.dequeue()
+        if root.value.leftChild is not None:
+            cq.enqueue(root.value.leftChild)
+        else:
+            root.value.leftChild=newNode
+            return "Inserted successfully"
+        if root.value.rightChild is not None:
+            cq.enqueue(root.value.rightChild)
+        else:
+            root.value.leftChild=newNode
+            return "Inserted successfully"
+
+# For deletion, get the deepest node in B tree, and replace it in place where node is to be deleted.
+def getDeepestNode(rootNode):
+    if not rootNode:
+        return
+    cq=queue.Queue()
+    cq.enqueue(rootNode)
+    while not(cq.isEmpty()):
+        root=cq.dequeue()
+        if root.value.leftChild is not None:
+            cq.enqueue(root.value.leftChild)
+        if root.value.rightChild is not None:
+            cq.enqueue(root.value.rightChild)
+    deepestNode=root.value
+    return deepestNode
+
+
+def deleteDeepestNode(rootNode,dNode):
+    if not rootNode:
+        return
+    cq=queue.Queue()
+    cq.enqueue(rootNode)
+    while not(cq.isEmpty()):
+        root=cq.dequeue()
+        if root.value is dNode:
+            root.value=None
+            return
+        if root.value.rightChild:
+            if root.value.rightChild is dNode:
+                root.value.rightChild=None
+                return
+            else:
+                cq.enqueue(root.value.rightChild)
+
+        if root.value.leftChild:
+            if root.value.leftChild is dNode:
+                root.value.leftChild=None
+                return
+            else:
+                cq.enqueue(root.value.leftChild)
+    
+
+def deleteNodeBT(rootNode,node):
+    if not rootNode:
+        return "BT does not exist"
+    cq=queue.Queue()
+    cq.enqueue(rootNode)
+    while not(cq.isEmpty()):
+        root=cq.dequeue()
+        if root.value.data==node:
+            dNode=getDeepestNode(rootNode)
+            root.value.data=dNode.data
+            deleteDeepestNode(rootNode,dNode)
+            return "Root has been successfully deleted"
+
+        if root.value.leftChild is not None:
+            cq.enqueue(root.value.leftChild)
+        if root.value.rightChild is not None:
+            cq.enqueue(root.value.rightChild)
+
+    return "Failed to delete"
+
+def deleteBT(rootNode):
+    rootNode.data=None
+    rootNode.leftChild=None
+    rootNode.rightChild=None
+    return "Binary Tree has been successfully deleted"
+
+
+
+print(searchBT(bt,"Tea"))
+
+cola=TreeNode("Cola")
+insertNodeBT(bt,cola)
+
+# dNode=getDeepestNode(bt)
+# deleteDeepestNode(bt,dNode)
+
+deleteNodeBT(bt,'Tea')
+
 levelOrderTraversal(bt)
