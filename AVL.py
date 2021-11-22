@@ -56,7 +56,63 @@ def searchNode(rootNode,value):
             return
         searchNode(rootNode.rightChild,value)
 
+def getHeight(rootNode):
+    if not rootNode:
+        return 0
+    return rootNode.height
 
 
-avl=AVLNode(10)
+def rightRotate(disbalancedNode):
+    newRoot=disbalancedNode.leftChild
+    disbalancedNode.leftChild=disbalancedNode.leftChild.rightChild
+    newRoot.rightChild=disbalancedNode
+    disbalancedNode.height=1+max(getHeight(disbalancedNode.leftChild),getHeight(disbalancedNode.rightChild))
+    newRoot.height=1+max(getHeight(newRoot.leftChild),getHeight(newRoot.rightChild))
+    return newRoot
+
+def leftRotate(disbalancedNode):
+    newRoot=disbalancedNode.rightChild
+    disbalancedNode.rightChild=disbalancedNode.rightChild.leftChild
+    newRoot.leftChild=disbalancedNode
+    disbalancedNode.height=1+max(getHeight(disbalancedNode.leftChild),getHeight(disbalancedNode.rightChild))
+    newRoot.height=1+max(getHeight(newRoot.leftChild),getHeight(newRoot.rightChild))
+    return newRoot
+
+def getBalance(rootNode):
+    if not rootNode:
+        return 0
+    return getHeight(rootNode.leftChild)-getHeight(rootNode.rightChild)
+
+def insertNode(rootNode,value):
+    if not rootNode:
+        return AVLNode(value)
+    if value<rootNode.data:
+        rootNode.leftChild=insertNode(rootNode.leftChild,value)
+    else:
+        rootNode.rightChild=insertNode(rootNode.rightChild,value)
+
+    rootNode.height=1+max(getHeight(rootNode.leftChild),getHeight(rootNode.rightChild))
+
+    balance=getBalance(rootNode)
+
+    if balance>1 and value<rootNode.leftChild.data:
+        return rightRotate(rootNode)
+    if balance>1 and value>rootNode.leftChild.data:
+        rootNode.leftChild=leftRotate(rootNode.leftChild)
+        return rightRotate(rootNode)
+    if balance<-1 and value>rootNode.rightChild.data:
+        return leftRotate(rootNode)
+    if balance<-1 and value<rootNode.rightChild.data:
+        rootNode.rightChild=rightRotate(rootNode.rightChild)
+        return leftRotate(rootNode)
+
+    return rootNode
+
+
+avl=AVLNode(5)
+avl=insertNode(avl,10)
+avl=insertNode(avl,15)
+avl=insertNode(avl,20)
+
+
 levelOrderTraversal(avl)
