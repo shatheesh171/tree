@@ -101,6 +101,9 @@ def extractNode(rootNode,heapType):
     heapifyTreeExtract(rootNode,1,heapType)
     return extractedNode
 
+def deleteEntireBH(rootNode):
+    rootNode.customList=None
+
 
 bh=Heap(5)
 insertNode(bh,4,"max")
